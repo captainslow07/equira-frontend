@@ -3,11 +3,11 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Equira Labs | Coming Soon</title>
+        <title>Equira Labs | Trustworthy AI</title>
         <style>
             :root {
                 --accent: #38bdf8;
-                --bg: #030712; /* Deeper dark blue/black */
+                --bg: #030712;
             }
             body {
                 margin: 0;
@@ -18,96 +18,77 @@
                 justify-content: center;
                 align-items: center;
                 min-height: 100vh;
-                overflow: hidden;
-            }
-            /* Subtle background glow */
-            body::before {
-                content: "";
-                position: absolute;
-                width: 300px;
-                height: 300px;
-                background: var(--accent);
-                filter: blur(150px);
-                opacity: 0.15;
-                z-index: -1;
             }
             .card {
                 text-align: center;
-                padding: 3rem 2rem;
+                padding: 4rem 2rem;
                 border-radius: 1.5rem;
-                background: rgba(255, 255, 255, 0.02);
+                background: linear-gradient(
+                    145deg,
+                    rgba(255, 255, 255, 0.03) 0%,
+                    rgba(255, 255, 255, 0.01) 100%
+                );
                 border: 1px solid rgba(255, 255, 255, 0.08);
                 backdrop-filter: blur(12px);
-                max-width: 450px;
+                max-width: 650px; /* Widened to accommodate the mission statement */
                 width: 90%;
             }
             .logo {
-                max-width: 140px;
-                margin-bottom: 2rem;
-                filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.2));
+                max-width: 120px;
+                margin-bottom: 2.5rem;
+                filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.15));
             }
-            .coming-soon {
+            .tagline {
                 text-transform: uppercase;
-                letter-spacing: 0.3em;
-                font-size: 0.75rem;
+                letter-spacing: 0.4em;
+                font-size: 0.7rem;
                 color: var(--accent);
                 font-weight: 700;
-                margin-bottom: 1rem;
+                margin-bottom: 1.5rem;
                 display: block;
-                animation: pulse 2s infinite;
             }
             h1 {
-                font-size: 2.2rem;
+                font-size: 2.5rem;
                 margin: 0;
-                background: linear-gradient(to bottom, #fff 40%, #94a3b8);
+                letter-spacing: -0.02em;
+                background: linear-gradient(to bottom, #fff 50%, #94a3b8);
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
-            p {
-                color: #64748b;
-                line-height: 1.6;
-                margin-top: 1.5rem;
-            }
-            .btn-fake {
+            .mission {
+                color: #94a3b8;
+                line-height: 1.8;
                 margin-top: 2rem;
-                display: inline-block;
-                padding: 10px 24px;
-                border-radius: 8px;
-                background: white;
-                color: black;
-                text-decoration: none;
-                font-weight: 600;
-                font-size: 0.9rem;
-                transition: transform 0.2s;
+                font-size: 1.1rem;
+                font-weight: 400;
+                text-align: center;
             }
-            .btn-fake:hover {
-                transform: translateY(-2px);
+            .highlight {
+                color: white;
+                font-weight: 500;
             }
-
-            @keyframes pulse {
-                0%,
-                100% {
-                    opacity: 1;
-                }
-                50% {
-                    opacity: 0.5;
-                }
+            .footer-tag {
+                margin-top: 3rem;
+                font-family: monospace;
+                font-size: 0.75rem;
+                color: #475569;
             }
         </style>
     </head>
     <body>
         <div class="card">
-            <span class="coming-soon">Intelligence in Progress</span>
+            <span class="tagline">Governance that disappears</span>
             <img src="assets/logo.svg" alt="Equira Labs Logo" class="logo" />
             <h1>Equira Labs</h1>
-            <p>
-                We are currently architecting a new digital experience. The full
-                site is launching soon.
+
+            <p class="mission">
+                Our mission is to make powerful AI systems
+                <span class="highlight">trustworthy by design</span>—aligning
+                them with human intent through invisible, scalable governance
+                that enables confident adoption across enterprises and society.
             </p>
 
-            <a href="mailto:equira.labs@gmail.com" class="btn-fake"
-                >Contact the Lab</a
-            >
+            <div class="footer-tag">// SECURING_THE_SYNTHETIC_FRONTIER</div>
         </div>
     </body>
 </html>
