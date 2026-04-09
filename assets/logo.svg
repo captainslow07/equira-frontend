@@ -1,0 +1,24 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+
+  <!-- Background -->
+  <rect width="512" height="512" fill="#FFFFFF"></rect>
+
+  <!-- Logo group -->
+  <g transform="translate(80,206)">
+
+    <!-- Equilibrium Symbol -->
+    <g transform="translate(0,-36)">
+      <!-- Left bar -->
+      <rect x="0" y="0" width="28" height="160" rx="14" fill="#0F172A"></rect>
+
+      <!-- Right bar (slightly offset) -->
+      <rect x="60" y="16" width="28" height="128" rx="14" fill="#0F172A"></rect>
+    </g>
+
+    <!-- Wordmark -->
+    <text x="120" y="60" font-family="Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif" font-size="40" font-weight="500" letter-spacing="0.6" fill="#0F172A">
+      Equira Labs
+    </text>
+
+  </g>
+</svg>

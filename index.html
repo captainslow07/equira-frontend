@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Equira Labs | Coming Soon</title>
+        <style>
+            :root {
+                --accent: #38bdf8;
+                --bg: #030712; /* Deeper dark blue/black */
+            }
+            body {
+                margin: 0;
+                background-color: var(--bg);
+                color: white;
+                font-family: "Inter", system-ui, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                overflow: hidden;
+            }
+            /* Subtle background glow */
+            body::before {
+                content: "";
+                position: absolute;
+                width: 300px;
+                height: 300px;
+                background: var(--accent);
+                filter: blur(150px);
+                opacity: 0.15;
+                z-index: -1;
+            }
+            .card {
+                text-align: center;
+                padding: 3rem 2rem;
+                border-radius: 1.5rem;
+                background: rgba(255, 255, 255, 0.02);
+                border: 1px solid rgba(255, 255, 255, 0.08);
+                backdrop-filter: blur(12px);
+                max-width: 450px;
+                width: 90%;
+            }
+            .logo {
+                max-width: 140px;
+                margin-bottom: 2rem;
+                filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.2));
+            }
+            .coming-soon {
+                text-transform: uppercase;
+                letter-spacing: 0.3em;
+                font-size: 0.75rem;
+                color: var(--accent);
+                font-weight: 700;
+                margin-bottom: 1rem;
+                display: block;
+                animation: pulse 2s infinite;
+            }
+            h1 {
+                font-size: 2.2rem;
+                margin: 0;
+                background: linear-gradient(to bottom, #fff 40%, #94a3b8);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+            p {
+                color: #64748b;
+                line-height: 1.6;
+                margin-top: 1.5rem;
+            }
+            .btn-fake {
+                margin-top: 2rem;
+                display: inline-block;
+                padding: 10px 24px;
+                border-radius: 8px;
+                background: white;
+                color: black;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 0.9rem;
+                transition: transform 0.2s;
+            }
+            .btn-fake:hover {
+                transform: translateY(-2px);
+            }
+
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.5;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="card">
+            <span class="coming-soon">Intelligence in Progress</span>
+            <img src="assets/logo.svg" alt="Equira Labs Logo" class="logo" />
+            <h1>Equira Labs</h1>
+            <p>
+                We are currently architecting a new digital experience. The full
+                site is launching soon.
+            </p>
+
+            <a href="mailto:equira.labs@gmail.com" class="btn-fake"
+                >Contact the Lab</a
+            >
+        </div>
+    </body>
+</html>

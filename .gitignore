@@ -1,0 +1,9 @@
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# Folder icons
+Icon?
+
+# Node modules (for when you start using React/Vue later)
+node_modules/
