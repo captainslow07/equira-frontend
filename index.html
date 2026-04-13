@@ -5,30 +5,54 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Equira Labs | Trustworthy AI</title>
         <style>
+            /* Warm Theme Palette */
             :root {
-                --accent: #38bdf8;
-                --bg: #030712;
+                --accent: #d97706; /* Warm Amber */
+                --bg: #292524; /* Deep Stone/Espresso */
+                --text: #f5f5f4; /* Soft Warm White */
+                --card-bg: #44403c; /* Muted warm grey-brown */
+                --card-border: rgba(255, 255, 255, 0.05);
+                --mission-text: #d6d3d1;
+            }
+            [data-theme="light"] {
+                --accent: #b45309; /* Deeper Amber */
+                --bg: #fdf6e3; /* Warm Solarized Cream */
+                --text: #57534e; /* Soft Coffee Text */
+                --card-bg: #ffffff;
+                --card-border: rgba(0, 0, 0, 0.05);
+                --mission-text: #78716c;
             }
             body {
                 margin: 0;
                 background-color: var(--bg);
-                color: white;
+                color: var(--text);
                 font-family: "Inter", system-ui, sans-serif;
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 min-height: 100vh;
+                transition:
+                    background-color 0.4s,
+                    color 0.4s;
+            }
+            .theme-toggle {
+                position: absolute;
+                top: 1.5rem;
+                right: 1.5rem;
+                background: none;
+                border: 1px solid var(--accent);
+                color: var(--accent);
+                padding: 0.5rem 1rem;
+                border-radius: 0.5rem;
+                cursor: pointer;
+                font-size: 1.2rem;
             }
             .card {
                 text-align: center;
                 padding: 4rem 2rem;
                 border-radius: 1.5rem;
-                background: linear-gradient(
-                    145deg,
-                    rgba(255, 255, 255, 0.03) 0%,
-                    rgba(255, 255, 255, 0.01) 100%
-                );
-                border: 1px solid rgba(255, 255, 255, 0.08);
+                background: var(--card-bg);
+                border: 1px solid var(--card-border);
                 backdrop-filter: blur(12px);
                 max-width: 650px;
                 width: 90%;
@@ -48,7 +72,6 @@
             .logo {
                 max-width: 120px;
                 margin-bottom: 2.5rem;
-                filter: drop-shadow(0 0 20px rgba(56, 189, 248, 0.15));
             }
             .tagline {
                 text-transform: uppercase;
@@ -63,12 +86,16 @@
                 font-size: 2.5rem;
                 margin: 0;
                 letter-spacing: -0.02em;
-                background: linear-gradient(to bottom, #fff 50%, #94a3b8);
+                background: linear-gradient(
+                    to bottom,
+                    var(--text) 50%,
+                    var(--mission-text)
+                );
                 -webkit-background-clip: text;
                 -webkit-text-fill-color: transparent;
             }
             .mission {
-                color: #94a3b8;
+                color: var(--mission-text);
                 line-height: 1.8;
                 margin-top: 2rem;
                 font-size: 1.1rem;
@@ -76,14 +103,14 @@
                 text-align: center;
             }
             .highlight {
-                color: white;
+                color: var(--text);
                 font-weight: 500;
             }
             .footer-tag {
                 margin-top: 3rem;
                 font-family: monospace;
                 font-size: 0.75rem;
-                color: #475569;
+                color: #a8a29e;
             }
             .upload-btn {
                 margin-top: 2rem;
@@ -99,30 +126,44 @@
             }
             .upload-btn:hover {
                 background: var(--accent);
-                color: var(--bg);
+                color: white;
             }
             #statusArea {
                 margin-top: 2rem;
-                color: white;
+                color: var(--text);
                 font-size: 1.2rem;
                 font-weight: 500;
                 min-height: 1.5em;
             }
+            .progress-container {
+                width: 100%;
+                height: 6px;
+                background: rgba(100, 100, 100, 0.1);
+                border-radius: 3px;
+                margin-top: 1rem;
+                overflow: hidden;
+                display: none;
+            }
+            .progress-bar {
+                height: 100%;
+                background: var(--accent);
+                width: 0%;
+                transition: width 0.3s ease;
+            }
         </style>
     </head>
     <body>
+        <button id="themeToggle" class="theme-toggle">☀️</button>
         <div class="card" id="mainCard">
             <span class="tagline">Governance that disappears</span>
             <img src="assets/logo.svg" alt="Equira Labs Logo" class="logo" />
             <h1>Equira Labs</h1>
-
             <p class="mission">
                 Our mission is to make powerful AI systems
                 <span class="highlight">trustworthy by design</span>—aligning
                 them with human intent through invisible, scalable governance
                 that enables confident adoption across enterprises and society.
             </p>
-
             <button class="upload-btn" id="uploadBtn">Try it Out!</button>
             <input
                 type="file"
@@ -130,39 +171,82 @@
                 style="display: none"
                 accept="image/*,video/*"
             />
-
             <div id="statusArea"></div>
-
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
             <div class="footer-tag">// SECURING_THE_SYNTHETIC_FRONTIER</div>
         </div>
-
         <script>
+            const themeToggle = document.getElementById("themeToggle");
+            themeToggle.addEventListener("click", () => {
+                document.body.dataset.theme =
+                    document.body.dataset.theme === "light" ? "dark" : "light";
+                themeToggle.innerText =
+                    document.body.dataset.theme === "light" ? "🌙" : "☀️";
+            });
+            const BASE_URL = "https://odylic-oscillatory-darron.ngrok-free.dev";
             const uploadBtn = document.getElementById("uploadBtn");
             const fileInput = document.getElementById("fileInput");
             const statusArea = document.getElementById("statusArea");
             const mainCard = document.getElementById("mainCard");
-
+            const progressContainer =
+                document.getElementById("progressContainer");
+            const progressBar = document.getElementById("progressBar");
             uploadBtn.addEventListener("click", () => fileInput.click());
-
             fileInput.addEventListener("change", async (e) => {
                 const file = e.target.files[0];
                 if (!file) return;
-
-                setState("UPLOADING", "Starting upload...");
-
                 try {
-                    await mockUpload(file);
-                    setState("PROCESSING", "Analyzing your content...");
-                    const guid = await mockProcessing();
-                    await pollResults(guid);
+                    setState("UPLOADING", "Initializing upload...");
+                    const initRes = await fetch(`${BASE_URL}/analyze`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            filename: file.name,
+                            size: file.size,
+                        }),
+                    });
+                    const { submission_id } = await initRes.json();
+                    const CHUNK_SIZE = 5 * 1024 * 1024;
+                    const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+                    progressContainer.style.display = "block";
+                    for (let i = 0; i < totalChunks; i++) {
+                        setState(
+                            "UPLOADING",
+                            `Uploading chunk ${i + 1} of ${totalChunks}...`,
+                        );
+                        const start = i * CHUNK_SIZE;
+                        const end = Math.min(start + CHUNK_SIZE, file.size);
+                        const chunk = file.slice(start, end);
+                        await fetch(
+                            `${BASE_URL}/analyze/${submission_id}/chunk`,
+                            {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/octet-stream",
+                                    "X-Chunk-Index": i.toString(),
+                                },
+                                body: chunk,
+                            },
+                        );
+                        const percent = ((i + 1) / totalChunks) * 100;
+                        progressBar.style.width = `${percent}%`;
+                    }
+                    setState("PROCESSING", "Analyzing...");
+                    progressContainer.style.display = "none";
+                    await fetch(
+                        `${BASE_URL}/analyze/${submission_id}/complete`,
+                        { method: "POST" },
+                    );
+                    pollResults(submission_id);
                 } catch (err) {
+                    progressContainer.style.display = "none";
                     setState("IDLE", "Error: " + err.message);
                 }
             });
-
             function setState(newState, message) {
                 statusArea.innerText = message;
-
                 if (newState !== "IDLE") {
                     mainCard.classList.add("active-state");
                     uploadBtn.style.display = "none";
@@ -171,20 +255,37 @@
                     uploadBtn.style.display = "block";
                 }
             }
-
-            async function mockUpload(file) {
-                return new Promise((resolve) => setTimeout(resolve, 2000));
-            }
-            async function mockProcessing() {
-                return "guid-12345";
-            }
             async function pollResults(guid) {
-                statusArea.innerText = `Processing: ${guid} (Checking...)`;
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                setState(
-                    "COMPLETED",
-                    "Analysis Complete: Your content is safe.",
-                );
+                let attempts = 0;
+                let currentInterval = 2000;
+                const MAX_INTERVAL = 10000;
+                const MAX_ATTEMPTS = 10;
+                async function check() {
+                    try {
+                        const res = await fetch(`${BASE_URL}/results/${guid}`);
+                        const data = await res.json();
+                        attempts++;
+                        if (data.status === "COMPLETED") {
+                            setState(
+                                "COMPLETED",
+                                "Analysis Complete: " +
+                                    (data.findings || "Safe."),
+                            );
+                        } else if (attempts >= MAX_ATTEMPTS) {
+                            setState("IDLE", "Failed: Analysis timed out.");
+                        } else {
+                            statusArea.innerText = `Processing: ${data.status} (Attempt ${attempts})`;
+                            currentInterval = Math.min(
+                                currentInterval * 1.5,
+                                MAX_INTERVAL,
+                            );
+                            setTimeout(check, currentInterval);
+                        }
+                    } catch (err) {
+                        setState("IDLE", "Polling Error: " + err.message);
+                    }
+                }
+                check();
             }
         </script>
     </body>
