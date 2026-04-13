@@ -39,19 +39,58 @@
             }
             .header-nav {
                 position: absolute;
-                top: 1rem;
-                right: 1rem;
+                top: 2rem;
+                right: 2rem;
                 z-index: 100;
+                padding-bottom: 1rem;
             }
-            .theme-toggle {
-                background: none;
-                border: 1px solid var(--accent);
-                color: var(--accent);
-                padding: 0.5rem 1rem;
-                border-radius: 0.5rem;
+            /* Toggle Switch Styling */
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 30px;
+            }
+            .switch input {
+                opacity: 0;
+                width: 0;
+                height: 0;
+            }
+            .slider {
+                position: absolute;
                 cursor: pointer;
-                font-size: 1.2rem;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #78716c;
+                transition: 0.4s;
+                border-radius: 34px;
             }
+            /* The knob with the icon */
+            .slider:before {
+                position: absolute;
+                content: "🌙";
+                height: 22px;
+                width: 22px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                transition: 0.4s;
+                border-radius: 50%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 12px;
+            }
+            input:checked + .slider {
+                background-color: var(--accent);
+            }
+            input:checked + .slider:before {
+                transform: translateX(30px);
+                content: "☀️";
+            }
+
             .card {
                 text-align: center;
                 padding: 4rem 2rem;
@@ -160,7 +199,10 @@
     </head>
     <body>
         <div class="header-nav">
-            <button id="themeToggle" class="theme-toggle">☀️</button>
+            <label class="switch">
+                <input type="checkbox" id="themeToggle" />
+                <span class="slider"></span>
+            </label>
         </div>
         <div class="card" id="mainCard">
             <span class="tagline">Governance that disappears</span>
@@ -188,11 +230,12 @@
         <script>
             const LOG_PREFIX = "[Equira UI]";
             const themeToggle = document.getElementById("themeToggle");
-            themeToggle.addEventListener("click", () => {
-                document.body.dataset.theme =
-                    document.body.dataset.theme === "light" ? "dark" : "light";
-                themeToggle.innerText =
-                    document.body.dataset.theme === "light" ? "🌙" : "☀️";
+            themeToggle.addEventListener("change", () => {
+                const isLight = themeToggle.checked;
+                document.body.dataset.theme = isLight ? "light" : "dark";
+                console.log(
+                    `${LOG_PREFIX} Theme switched to: ${document.body.dataset.theme}`,
+                );
             });
 
             const BASE_URL = "https://odylic-oscillatory-darron.ngrok-free.dev";
@@ -309,7 +352,7 @@
                 let attempts = 0;
                 let currentInterval = 2000;
                 const MAX_INTERVAL = 10000;
-                const MAX_ATTEMPTS = 15; // Increased slightly for slower processing
+                const MAX_ATTEMPTS = 15;
 
                 async function check() {
                     try {
@@ -317,7 +360,14 @@
                         if (!res.ok)
                             throw new Error("Server error: " + res.status);
 
-                        const data = await res.json();
+                        const text = await res.text();
+                        let data;
+                        try {
+                            data = JSON.parse(text);
+                        } catch (e) {
+                            throw new Error("Invalid response format");
+                        }
+
                         attempts++;
                         console.log(
                             `${LOG_PREFIX} Polling attempt ${attempts}, status: ${data.status}`,
