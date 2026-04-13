@@ -29,20 +29,27 @@
                 font-family: "Inter", system-ui, sans-serif;
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
                 align-items: center;
                 min-height: 100vh;
-                padding: 1rem;
                 transition:
                     background-color 0.4s,
                     color 0.4s;
             }
-            .header-nav {
-                position: absolute;
-                top: 2rem;
-                right: 2rem;
-                z-index: 100;
-                padding-bottom: 1rem;
+            /* Header Nav: Non-overlapping, top right */
+            header {
+                width: 100%;
+                display: flex;
+                justify-content: flex-end;
+                padding: 1.5rem;
+                box-sizing: border-box;
+            }
+            .content-wrapper {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                padding: 1rem;
             }
             /* Toggle Switch Styling */
             .switch {
@@ -70,7 +77,7 @@
             /* The knob with the icon */
             .slider:before {
                 position: absolute;
-                content: "🌙";
+                content: "☀️";
                 height: 22px;
                 width: 22px;
                 left: 4px;
@@ -88,7 +95,7 @@
             }
             input:checked + .slider:before {
                 transform: translateX(30px);
-                content: "☀️";
+                content: "🌙";
             }
 
             .card {
@@ -198,34 +205,42 @@
         </style>
     </head>
     <body>
-        <div class="header-nav">
+        <header>
             <label class="switch">
                 <input type="checkbox" id="themeToggle" />
                 <span class="slider"></span>
             </label>
-        </div>
-        <div class="card" id="mainCard">
-            <span class="tagline">Governance that disappears</span>
-            <img src="assets/logo.svg" alt="Equira Labs Logo" class="logo" />
-            <h1>Equira Labs</h1>
-            <p class="mission">
-                Our mission is to make powerful AI systems
-                <span class="highlight">trustworthy by design</span>—aligning
-                them with human intent through invisible, scalable governance
-                that enables confident adoption across enterprises and society.
-            </p>
-            <button class="upload-btn" id="uploadBtn">Try it Out!</button>
-            <input
-                type="file"
-                id="fileInput"
-                style="display: none"
-                accept="image/*,video/*"
-            />
-            <div id="statusArea"></div>
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar" id="progressBar"></div>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="card" id="mainCard">
+                <span class="tagline">Governance that disappears</span>
+                <img
+                    src="assets/logo.svg"
+                    alt="Equira Labs Logo"
+                    class="logo"
+                />
+                <h1>Equira Labs</h1>
+                <p class="mission">
+                    Our mission is to make powerful AI systems
+                    <span class="highlight">trustworthy by design</span
+                    >—aligning them with human intent through invisible,
+                    scalable governance that enables confident adoption across
+                    enterprises and society.
+                </p>
+                <button class="upload-btn" id="uploadBtn">Try it Out!</button>
+                <input
+                    type="file"
+                    id="fileInput"
+                    style="display: none"
+                    accept="image/*,video/*"
+                />
+                <div id="statusArea"></div>
+                <div class="progress-container" id="progressContainer">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="footer-tag">// SECURING_THE_SYNTHETIC_FRONTIER</div>
             </div>
-            <div class="footer-tag">// SECURING_THE_SYNTHETIC_FRONTIER</div>
         </div>
         <script>
             const LOG_PREFIX = "[Equira UI]";
