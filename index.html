@@ -348,6 +348,8 @@
                     console.error(`${LOG_PREFIX} Workflow error:`, err);
                     progressContainer.style.display = "none";
                     setState("IDLE", "Error: " + err.message);
+                } finally {
+                    fileInput.value = "";
                 }
             });
 
