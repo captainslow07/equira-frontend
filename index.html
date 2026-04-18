@@ -306,7 +306,10 @@
                     setState("UPLOADING", "Initializing upload...");
                     const initRes = await fetch(`${BASE_URL}/analyze`, {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {
+                            "Content-Type": "application/json",
+                            "ngrok-skip-browser-warning": "true"
+                        },
                         body: JSON.stringify({
                             filename: file.name,
                             size: file.size,
@@ -333,6 +336,7 @@
                                 headers: {
                                     "Content-Type": "application/octet-stream",
                                     "X-Chunk-Index": i.toString(),
+                                    "ngrok-skip-browser-warning": "true"
                                 },
                                 body: chunk,
                             },
@@ -348,7 +352,7 @@
                     progressContainer.style.display = "none";
                     const finalizeRes = await fetch(
                         `${BASE_URL}/analyze/${submission_id}/complete`,
-                        { method: "POST" },
+                        { method: "POST", headers: { "ngrok-skip-browser-warning": "true" } },
                     );
                     if (!finalizeRes.ok)
                         throw new Error(
@@ -377,7 +381,9 @@
             async function pollResults(guid) {
                 let attempts = 0;
                 async function check() {
-                    const res = await fetch(`${BASE_URL}/results/${guid}`);
+                    const res = await fetch(`${BASE_URL}/results/${guid}`, {
+                        headers: { "ngrok-skip-browser-warning": "true" },
+                    });
                     const data = await res.json();
                     if (data.status === "COMPLETED")
                         setState(
