@@ -5,19 +5,18 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Equira Labs | Trustworthy AI</title>
         <style>
-            /* Warm Theme Palette */
             :root {
-                --accent: #d97706; /* Warm Amber */
-                --bg: #292524; /* Deep Stone/Espresso */
-                --text: #f5f5f4; /* Soft Warm White */
-                --card-bg: #44403c; /* Muted warm grey-brown */
+                --accent: #d97706;
+                --bg: #292524;
+                --text: #f5f5f4;
+                --card-bg: #44403c;
                 --card-border: rgba(255, 255, 255, 0.05);
                 --mission-text: #d6d3d1;
             }
             [data-theme="light"] {
-                --accent: #b45309; /* Deeper Amber */
-                --bg: #fdf6e3; /* Warm Solarized Cream */
-                --text: #57534e; /* Soft Coffee Text */
+                --accent: #b45309;
+                --bg: #fdf6e3;
+                --text: #57534e;
                 --card-bg: #ffffff;
                 --card-border: rgba(0, 0, 0, 0.05);
                 --mission-text: #78716c;
@@ -27,31 +26,46 @@
                 background-color: var(--bg);
                 color: var(--text);
                 font-family: "Inter", system-ui, sans-serif;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                min-height: 100vh;
                 transition:
                     background-color 0.4s,
                     color 0.4s;
             }
-            /* Header Nav: Non-overlapping, top right */
             header {
                 width: 100%;
                 display: flex;
-                justify-content: flex-end;
-                padding: 1.5rem;
+                justify-content: space-between;
+                align-items: center;
+                padding: 1.5rem 3rem;
                 box-sizing: border-box;
             }
-            .content-wrapper {
-                flex: 1;
+            .brand {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                width: 100%;
-                padding: 1rem;
+                gap: 1rem;
+                font-weight: 700;
+                font-size: 1.2rem;
+                text-decoration: none;
+                color: var(--text);
             }
-            /* Toggle Switch Styling */
+            .logo-small {
+                width: 40px;
+                height: 40px;
+            }
+            .nav-links {
+                display: flex;
+                gap: 1.5rem;
+                font-size: 0.9rem;
+                align-items: center;
+            }
+            .nav-links a {
+                color: var(--text);
+                text-decoration: none;
+                opacity: 0.8;
+            }
+            .nav-links a:hover {
+                opacity: 1;
+                color: var(--accent);
+            }
             .switch {
                 position: relative;
                 display: inline-block;
@@ -74,7 +88,6 @@
                 transition: 0.4s;
                 border-radius: 34px;
             }
-            /* The knob with the icon */
             .slider:before {
                 position: absolute;
                 content: "☀️";
@@ -97,7 +110,14 @@
                 transform: translateX(30px);
                 content: "🌙";
             }
-
+            .content-wrapper {
+                flex: 1;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                padding: 1rem;
+            }
             .card {
                 text-align: center;
                 padding: 4rem 2rem;
@@ -108,17 +128,6 @@
                 max-width: 650px;
                 width: 100%;
                 transition: all 0.5s ease;
-            }
-            .logo,
-            .mission,
-            .tagline {
-                transition: all 0.5s ease;
-            }
-            .card.active-state .logo,
-            .card.active-state .mission,
-            .card.active-state .tagline {
-                opacity: 0.3;
-                transform: scale(0.95);
             }
             .logo {
                 max-width: 120px;
@@ -206,29 +215,36 @@
     </head>
     <body>
         <header>
-            <label class="switch">
-                <input type="checkbox" id="themeToggle" />
-                <span class="slider"></span>
-            </label>
+            <a href="index.html" class="brand">
+                <img
+                    src="assets/logo.svg"
+                    alt="Equira Labs Logo"
+                    class="logo-small"
+                />
+                <span class="brand-name">Equira Labs</span>
+            </a>
+            <nav class="nav-links">
+                <a href="about.html">About</a>
+                <a href="privacy.html">Privacy</a>
+                <a href="terms.html">Terms</a>
+                <a href="compliance.html">Compliance</a>
+                <a href="contact.html">Contact</a>
+                <label class="switch">
+                    <input type="checkbox" id="themeToggle" />
+                    <span class="slider"></span>
+                </label>
+            </nav>
         </header>
 
         <div class="content-wrapper">
             <div class="card" id="mainCard">
-                <span class="tagline">Governance that disappears</span>
-                <img
-                    src="assets/logo.svg"
-                    alt="Equira Labs Logo"
-                    class="logo"
-                />
-                <h1>Equira Labs</h1>
+                <span class="tagline"></span>
+                <h1>Detect deepfakes and misinformation in seconds</h1>
                 <p class="mission">
-                    Our mission is to make powerful AI systems
-                    <span class="highlight">trustworthy by design</span
-                    >—aligning them with human intent through invisible,
-                    scalable governance that enables confident adoption across
-                    enterprises and society.
+                    Upload media and get instant AI-based analysis you can
+                    understand and trust.
                 </p>
-                <button class="upload-btn" id="uploadBtn">Try it Out!</button>
+                <button class="upload-btn" id="uploadBtn">Try it out</button>
                 <input
                     type="file"
                     id="fileInput"
@@ -236,23 +252,35 @@
                     accept="image/*,video/*"
                 />
                 <div id="statusArea"></div>
+                <p
+                    style="
+                        font-size: 0.8rem;
+                        color: #a8a29e;
+                        margin-top: 0.5rem;
+                        text-align: center;
+                    "
+                >
+                    No signup required • Files deleted after processing
+                </p>
                 <div class="progress-container" id="progressContainer">
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
-                <div class="footer-tag">// SECURING_THE_SYNTHETIC_FRONTIER</div>
             </div>
         </div>
+
         <script>
-            const LOG_PREFIX = "[Equira UI]";
             const themeToggle = document.getElementById("themeToggle");
+            if (localStorage.getItem("theme") === "light") {
+                document.body.dataset.theme = "light";
+                themeToggle.checked = true;
+            }
             themeToggle.addEventListener("change", () => {
                 const isLight = themeToggle.checked;
                 document.body.dataset.theme = isLight ? "light" : "dark";
-                console.log(
-                    `${LOG_PREFIX} Theme switched to: ${document.body.dataset.theme}`,
-                );
+                localStorage.setItem("theme", isLight ? "light" : "dark");
             });
 
+            const LOG_PREFIX = "[Equira UI]";
             const BASE_URL = "https://odylic-oscillatory-darron.ngrok-free.dev";
             const uploadBtn = document.getElementById("uploadBtn");
             const fileInput = document.getElementById("fileInput");
@@ -276,7 +304,6 @@
 
                 try {
                     setState("UPLOADING", "Initializing upload...");
-
                     const initRes = await fetch(`${BASE_URL}/analyze`, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -285,30 +312,20 @@
                             size: file.size,
                         }),
                     });
-
                     if (!initRes.ok)
                         throw new Error(
                             `Initialization failed: ${initRes.status}`,
                         );
-
                     const { submission_id } = await initRes.json();
-                    console.log(
-                        `${LOG_PREFIX} Upload initialized. ID: ${submission_id}`,
-                    );
 
-                    const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
+                    const CHUNK_SIZE = 5 * 1024 * 1024;
                     const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
                     progressContainer.style.display = "block";
 
                     for (let i = 0; i < totalChunks; i++) {
-                        setState(
-                            "UPLOADING",
-                            `Uploading chunk ${i + 1} of ${totalChunks}...`,
-                        );
                         const start = i * CHUNK_SIZE;
                         const end = Math.min(start + CHUNK_SIZE, file.size);
                         const chunk = file.slice(start, end);
-
                         const chunkRes = await fetch(
                             `${BASE_URL}/analyze/${submission_id}/chunk`,
                             {
@@ -320,20 +337,15 @@
                                 body: chunk,
                             },
                         );
-
                         if (!chunkRes.ok)
                             throw new Error(
                                 `Chunk ${i} upload failed: ${chunkRes.status}`,
                             );
-
-                        const percent = ((i + 1) / totalChunks) * 100;
-                        progressBar.style.width = `${percent}%`;
+                        progressBar.style.width = `${((i + 1) / totalChunks) * 100}%`;
                     }
 
-                    console.log(`${LOG_PREFIX} Upload complete. Finalizing...`);
                     setState("PROCESSING", "Analyzing...");
                     progressContainer.style.display = "none";
-
                     const finalizeRes = await fetch(
                         `${BASE_URL}/analyze/${submission_id}/complete`,
                         { method: "POST" },
@@ -342,10 +354,8 @@
                         throw new Error(
                             `Finalization failed: ${finalizeRes.status}`,
                         );
-
                     pollResults(submission_id);
                 } catch (err) {
-                    console.error(`${LOG_PREFIX} Workflow error:`, err);
                     progressContainer.style.display = "none";
                     setState("IDLE", "Error: " + err.message);
                 } finally {
@@ -365,67 +375,26 @@
             }
 
             async function pollResults(guid) {
-                console.log(`${LOG_PREFIX} Polling started for ID: ${guid}`);
                 let attempts = 0;
-                let currentInterval = 2000;
-                const MAX_INTERVAL = 10000;
-                const MAX_ATTEMPTS = 15;
-
                 async function check() {
-                    try {
-                        const res = await fetch(`${BASE_URL}/results/${guid}`);
-                        if (!res.ok)
-                            throw new Error("Server error: " + res.status);
-
-                        const text = await res.text();
-                        let data;
-                        try {
-                            data = JSON.parse(text);
-                        } catch (e) {
-                            throw new Error("Invalid response format");
-                        }
-
-                        attempts++;
-                        console.log(
-                            `${LOG_PREFIX} Polling attempt ${attempts}, status: ${data.status}`,
+                    const res = await fetch(`${BASE_URL}/results/${guid}`);
+                    const data = await res.json();
+                    if (data.status === "COMPLETED")
+                        setState(
+                            "COMPLETED",
+                            "Analysis Complete: " + (data.findings || "Safe."),
                         );
-
-                        if (data.status === "COMPLETED") {
-                            console.log(`${LOG_PREFIX} Analysis complete.`);
-                            setState(
-                                "COMPLETED",
-                                "Analysis Complete: " +
-                                    (data.findings || "Safe."),
-                            );
-                        } else if (data.status === "FAILED") {
-                            console.error(
-                                `${LOG_PREFIX} Analysis failed from backend: ${data.findings}`,
-                            );
-                            setState(
-                                "IDLE",
-                                "Analysis Failed: " +
-                                    (data.findings || "Unknown error"),
-                            );
-                        } else if (attempts >= MAX_ATTEMPTS) {
-                            console.warn(
-                                `${LOG_PREFIX} Analysis timed out after ${MAX_ATTEMPTS} attempts.`,
-                            );
-                            setState("IDLE", "Failed: Analysis timed out.");
-                        } else {
-                            statusArea.innerText = `Processing: ${data.status} (Attempt ${attempts})`;
-                            currentInterval = Math.min(
-                                currentInterval * 1.5,
-                                MAX_INTERVAL,
-                            );
-                            setTimeout(check, currentInterval);
-                        }
-                    } catch (err) {
-                        console.error(`${LOG_PREFIX} Polling error:`, err);
-                        setState("IDLE", "Polling Error: " + err.message);
-                    }
+                    else if (data.status === "FAILED")
+                        setState(
+                            "IDLE",
+                            "Analysis Failed: " + (data.findings || "Unknown"),
+                        );
+                    else if (attempts++ < 15) setTimeout(check, 2000);
+                    else setState("IDLE", "Timeout");
                 }
                 check();
             }
         </script>
+    <footer style="margin-top: 4rem; padding: 2rem; text-align: center; color: #a8a29e; font-size: 0.9rem; border-top: 1px solid rgba(128,128,128,0.2);"><nav style="margin-bottom: 1rem;"><a href="about.html" style="color: #a8a29e; text-decoration: none;">About</a> • <a href="privacy.html" style="color: #a8a29e; text-decoration: none;">Privacy Policy</a> • <a href="terms.html" style="color: #a8a29e; text-decoration: none;">Terms</a> • <a href="compliance.html" style="color: #a8a29e; text-decoration: none;">Compliance</a> • <a href="contact.html" style="color: #a8a29e; text-decoration: none;">Contact</a></nav><p></body>&copy; 2026 Equira Labs. All rights reserved.</p></footer>
     </body>
 </html>
