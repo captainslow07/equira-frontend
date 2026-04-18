@@ -381,9 +381,7 @@
             async function pollResults(guid) {
                 let attempts = 0;
                 async function check() {
-                    const res = await fetch(`${BASE_URL}/results/${guid}`, {
-                        headers: { "ngrok-skip-browser-warning": "true" },
-                    });
+                    const res = await fetch(`${BASE_URL}/results/${guid}`, { headers: { "ngrok-skip-browser-warning": "true" } });
                     const data = await res.json();
                     if (data.status === "COMPLETED")
                         setState(
