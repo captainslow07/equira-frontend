@@ -252,6 +252,7 @@
                     accept="image/*,video/*"
                 />
                 <div id="statusArea"></div>
+                <div id="resultsContainer" style="margin-top:1.5rem; display:none;"></div>
                 <p
                     style="
                         font-size: 0.8rem;
@@ -269,6 +270,62 @@
         </div>
 
         <script>
+            function renderResultsUI(resp) {
+                // Ensure container exists
+                const container = document.getElementById("resultsContainer");
+                if (!container) return;
+                container.style.display = "block";
+                container.innerHTML = "";
+
+                // Determine verdict and summary
+                const verdict = resp && (resp.verdict || (resp.result && resp.result.verdict)) || null;
+                const summary = resp && (resp.summary || (resp.result && (resp.result.summary || resp.result.summary_analysis))) || null;
+                const findings = resp && (resp.findings || (resp.result && resp.result.findings)) || null;
+
+                const card = document.createElement("div");
+                card.style.padding = "1rem";
+                card.style.borderRadius = "8px";
+                card.style.background = "rgba(255,255,255,0.03)";
+                card.style.border = "1px solid rgba(255,255,255,0.05)";
+
+                if (verdict) {
+                    const v = document.createElement("div");
+                    v.style.fontWeight = "700";
+                    v.style.fontSize = "1.25rem";
+                    v.style.marginBottom = "0.5rem";
+                    // color by verdict
+                    const lv = verdict.toString().toLowerCase();
+                    let color = "#9ca3af";
+                    if (lv.includes("accur") || lv.includes("plaus")) color = "#16a34a"; // green
+                    else if (lv.includes("implau") || lv.includes("inaccur") || lv.includes("incorrect") || lv.includes("false")) color = "#dc2626"; // red
+                    else if (lv.includes("partial") || lv.includes("parti")) color = "#f59e0b"; // amber
+                    v.style.color = color;
+                    v.innerText = `Verdict: ${verdict}`;
+                    card.appendChild(v);
+                }
+
+                if (summary) {
+                    const s = document.createElement("div");
+                    s.style.marginBottom = "0.5rem";
+                    s.style.color = "#e5e7eb";
+                    s.innerText = summary;
+                    card.appendChild(s);
+                }
+
+                if (findings) {
+                    const f = document.createElement("pre");
+                    f.style.whiteSpace = "pre-wrap";
+                    f.style.wordBreak = "break-word";
+                    f.style.background = "rgba(0,0,0,0.2)";
+                    f.style.padding = "0.75rem";
+                    f.style.borderRadius = "6px";
+                    f.style.color = "#cbd5e1";
+                    f.innerText = typeof findings === "string" ? findings : JSON.stringify(findings, null, 2);
+                    card.appendChild(f);
+                }
+
+                container.appendChild(card);
+            }
             const themeToggle = document.getElementById("themeToggle");
             if (localStorage.getItem("theme") === "light") {
                 document.body.dataset.theme = "light";
@@ -388,16 +445,50 @@
                             console.warn(`${LOG_PREFIX} pollResults fetch failed (attempt ${attempt}): ${res.status}`);
                         } else {
                             const data = await res.json();
-                            const status = (data.status || "").toString().toUpperCase().trim();
-                            const findings = data.findings || data.result || data.output || (data.data && data.data.findings) || null;
-                            if (status === "FAILED" || status === "FAIL") {
-                                setState("IDLE", "Analysis Failed: " + (findings || "Unknown"));
+
+                            // Extract status from possible locations
+                            const topStatus = data && data.status;
+                            const nestedStatus = data && data.result && data.result.status;
+                            const factStatus = data && data.result && data.result.fact_check && data.result.fact_check.status;
+                            const statusRaw = topStatus || nestedStatus || factStatus || "";
+                            const status = statusRaw.toString().toUpperCase().trim();
+
+                            // Prefer the richer payload when available
+                            const rich = data && data.result ? data.result : data;
+
+                            console.debug(`${LOG_PREFIX} pollResults response (attempt ${attempt}):`, data);
+
+                            // If summary or verdict present, treat as complete (covers many backends)
+                            const hasVerdict = (data && (data.verdict || (data.result && data.result.verdict))) || false;
+                            const hasSummary = (data && (data.summary || (data.result && (data.result.summary || data.result.summary_analysis)))) || false;
+                            if (hasVerdict || hasSummary) {
+                                renderResultsUI(data);
+                                setState("COMPLETED", "Analysis Complete");
                                 return;
                             }
 
-                            // Accept multiple possible success tokens (COMPLETE, COMPLETED, DONE, SUCCESS)
+                            // If findings text embeds status/verdict tokens
+                            const findingsText = (data && (data.findings || (rich && (rich.findings || rich.output || rich.summary))) || "").toString();
+                            if (findingsText) {
+                                const fup = findingsText.toUpperCase();
+                                if (fup.includes("STATUS:COMP") || fup.includes("STATUS: COMPLETE") || fup.includes("STATUS:COMPLETED") || fup.includes("VERDICT:")) {
+                                    renderResultsUI(data);
+                                    setState("COMPLETED", "Analysis Complete");
+                                    return;
+                                }
+                            }
+
+                            // Failure states
+                            if (status === "FAILED" || status === "FAIL" || status === "ERROR") {
+                                renderResultsUI({ status: status, findings: data.findings || (rich && rich.findings), error: true });
+                                setState("IDLE", "Analysis Failed");
+                                return;
+                            }
+
+                            // Success tokens
                             if (status === "COMPLETED" || status === "COMPLETE" || status === "DONE" || status === "SUCCESS" || status.startsWith("COMP")) {
-                                setState("COMPLETED", "Analysis Complete: " + (findings || "Safe."));
+                                renderResultsUI(data);
+                                setState("COMPLETED", "Analysis Complete");
                                 return;
                             }
                         }
