@@ -425,6 +425,12 @@
             });
 
             function setState(newState, message) {
+                if (typeof message === 'object' && message !== null) {
+                    // Prefer human-friendly fields when an object was passed
+                    if (message.summary) message = message.summary;
+                    else if (message.verdict) message = `Verdict: ${message.verdict}`;
+                    else message = JSON.stringify(message);
+                }
                 statusArea.innerText = message;
                 if (newState !== "IDLE") {
                     mainCard.classList.add("active-state");
