@@ -379,24 +379,31 @@
             }
 
             async function pollResults(guid) {
-                let attempts = 0;
-                async function check() {
-                    const res = await fetch(`${BASE_URL}/results/${guid}`, { headers: { "ngrok-skip-browser-warning": "true" } });
-                    const data = await res.json();
-                    if (data.status === "COMPLETED")
-                        setState(
-                            "COMPLETED",
-                            "Analysis Complete: " + (data.findings || "Safe."),
-                        );
-                    else if (data.status === "FAILED")
-                        setState(
-                            "IDLE",
-                            "Analysis Failed: " + (data.findings || "Unknown"),
-                        );
-                    else if (attempts++ < 15) setTimeout(check, 2000);
-                    else setState("IDLE", "Timeout");
+                const maxAttempts = 100;
+                const delayMs = 2000;
+                for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+                    try {
+                        const res = await fetch(`${BASE_URL}/results/${guid}`, { headers: { "ngrok-skip-browser-warning": "true" } });
+                        if (!res.ok) {
+                            console.warn(`${LOG_PREFIX} pollResults fetch failed (attempt ${attempt}): ${res.status}`);
+                        } else {
+                            const data = await res.json();
+                            if (data.status === "COMPLETED") {
+                                setState("COMPLETED", "Analysis Complete: " + (data.findings || "Safe."));
+                                return;
+                            } else if (data.status === "FAILED") {
+                                setState("IDLE", "Analysis Failed: " + (data.findings || "Unknown"));
+                                return;
+                            }
+                        }
+                    } catch (err) {
+                        console.warn(`${LOG_PREFIX} pollResults error (attempt ${attempt}): ${err}`);
+                    }
+
+                    if (attempt < maxAttempts) await new Promise((r) => setTimeout(r, delayMs));
                 }
-                check();
+
+                setState("IDLE", "Timeout");
             }
         </script>
     <footer style="margin-top: 4rem; padding: 2rem; text-align: center; color: #a8a29e; font-size: 0.9rem; border-top: 1px solid rgba(128,128,128,0.2);"><nav style="margin-bottom: 1rem;"><a href="about.html" style="color: #a8a29e; text-decoration: none;">About</a> • <a href="privacy.html" style="color: #a8a29e; text-decoration: none;">Privacy Policy</a> • <a href="terms.html" style="color: #a8a29e; text-decoration: none;">Terms</a> • <a href="compliance.html" style="color: #a8a29e; text-decoration: none;">Compliance</a> • <a href="contact.html" style="color: #a8a29e; text-decoration: none;">Contact</a></nav><p></body>&copy; 2026 Equira Labs. All rights reserved.</p></footer>
