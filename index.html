@@ -388,11 +388,16 @@
                             console.warn(`${LOG_PREFIX} pollResults fetch failed (attempt ${attempt}): ${res.status}`);
                         } else {
                             const data = await res.json();
-                            if (data.status === "COMPLETED") {
-                                setState("COMPLETED", "Analysis Complete: " + (data.findings || "Safe."));
+                            const status = (data.status || "").toString().toUpperCase().trim();
+                            const findings = data.findings || data.result || data.output || (data.data && data.data.findings) || null;
+                            if (status === "FAILED" || status === "FAIL") {
+                                setState("IDLE", "Analysis Failed: " + (findings || "Unknown"));
                                 return;
-                            } else if (data.status === "FAILED") {
-                                setState("IDLE", "Analysis Failed: " + (data.findings || "Unknown"));
+                            }
+
+                            // Accept multiple possible success tokens (COMPLETE, COMPLETED, DONE, SUCCESS)
+                            if (status === "COMPLETED" || status === "COMPLETE" || status === "DONE" || status === "SUCCESS" || status.startsWith("COMP")) {
+                                setState("COMPLETED", "Analysis Complete: " + (findings || "Safe."));
                                 return;
                             }
                         }
